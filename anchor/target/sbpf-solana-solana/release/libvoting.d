@@ -1,0 +1,1 @@
+/Users/nasrul/playground/blockchain/solana/voting-dapp/anchor/target/sbpf-solana-solana/release/libvoting.rlib: /Users/nasrul/playground/blockchain/solana/voting-dapp/anchor/programs/voting/src/lib.rs
