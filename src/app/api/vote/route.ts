@@ -61,7 +61,6 @@ export async function POST(request: Request) {
     const votingProgram: Program<Voting> = new Program(IDL as Voting, provider);
     const programId = votingProgram.programId;
 
-    // Derive PDAs according to program seeds (little-endian u64 and candidate name bytes)
     const pollId = new BN(1);
     const [pollPda] = PublicKey.findProgramAddressSync([Buffer.from(pollId.toArray("le", 8))], programId);
     const [candidatePda] = PublicKey.findProgramAddressSync([
@@ -69,7 +68,6 @@ export async function POST(request: Request) {
       Buffer.from(candidate, "utf8"),
     ], programId);
 
-    // Ensure required accounts exist to avoid wallet simulation failure
     const pollInfo = await connection.getAccountInfo(pollPda);
     if (!pollInfo) {
       return Response.json(
@@ -85,7 +83,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Build the vote instruction with explicit accounts
     let instruction;
     try {
       instruction = await votingProgram.methods
@@ -99,7 +96,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Fetch recent blockhash and assemble transaction
     let blockhash;
     try {
       blockhash = await connection.getLatestBlockhash();
