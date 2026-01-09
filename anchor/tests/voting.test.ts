@@ -6,22 +6,23 @@ import { startAnchor } from "solana-bankrun";
 import { BankrunProvider } from "anchor-bankrun";
 
 const IDL = require('../target/idl/voting.json');
-const votingAddress = new PublicKey('Count3AcZucFDPSFBAeHkQ6AvttieKUkyJ8HiQGhQwe');
+const votingAddress = new PublicKey('DwGLWi4HVytijLWPgbogFxj3JDtRRTP1AYA5KyeTDT9z');
 
 describe('voting', () => {
 
   let context;
-  let program;
   let provider;
+  anchor.setProvider(anchor.AnchorProvider.env());
+  let program = anchor.workspace.Voting as Program<Voting>;
 
   beforeAll(async ()=>{
-      context = await startAnchor("", [{name:"voting", programId:votingAddress}],[]);
-      provider = new BankrunProvider(context);
+    //   context = await startAnchor("", [{name:"voting", programId:votingAddress}],[]);
+    //   provider = new BankrunProvider(context);
 
-      program = new Program<Voting>(
-        IDL,
-        provider,
-    );
+    //   program = new Program<Voting>(
+    //     IDL,
+    //     provider,
+    // );
   })
 
   it('Initialize Poll', async () => {
@@ -48,51 +49,67 @@ describe('voting', () => {
   it('Initialize Candidate', async () => {
     await program.methods.initializeCandidate(
       new anchor.BN(1),
-      "Jack Lahuna Laguna",
+      "Kyrgyztan",
     ).rpc();
 
     await program.methods.initializeCandidate(
       new anchor.BN(1),
-      "Patrick",
+      "Swizzterland",
     ).rpc();
 
-     const [patrickAddress] = PublicKey.findProgramAddressSync(
-      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from("Patrick")],
+    await program.methods.initializeCandidate(
+      new anchor.BN(1),
+      "Japan",
+    ).rpc();
+
+     const [kyrgyztanAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from("Kyrgyztan")],
       votingAddress,
     );
 
-    const patrick = await program.account.candidate.fetch(patrickAddress);
-    console.log(patrick);
+    const kyrgyztan = await program.account.candidate.fetch(kyrgyztanAddress);
+    console.log(kyrgyztan);
 
-    expect (patrick.candidateName).toEqual("Patrick");
-    expect (patrick.candidateVotes.toNumber()).toEqual(0);
+    expect (kyrgyztan.candidateName).toEqual("Kyrgyztan");
+    expect (kyrgyztan.candidateVotes.toNumber()).toEqual(0);
 
-    const [jackAddress] = PublicKey.findProgramAddressSync(
-      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from("Jack Lahuna Laguna")],
+    const [swizzterlandAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from("Swizzterland")],
       votingAddress,
     );
 
-    const jack = await program.account.candidate.fetch(jackAddress);
-    console.log(jack);
+    const swizzterland = await program.account.candidate.fetch(swizzterlandAddress);
+    console.log(swizzterland);
 
-    expect (jack.candidateName).toEqual("Jack Lahuna Laguna");
-    expect (jack.candidateVotes.toNumber()).toEqual(0);
+    expect (swizzterland.candidateName).toEqual("Swizzterland");
+    expect (swizzterland.candidateVotes.toNumber()).toEqual(0);
+
+    const [japanAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from("Japan")],
+      votingAddress,
+    );
+
+    const japan = await program.account.candidate.fetch(japanAddress);
+    console.log(japan);
+
+    expect (japan.candidateName).toEqual("Japan");
+    expect (japan.candidateVotes.toNumber()).toEqual(0);
   });
 
   it('Vote', async () => {
     await program.methods.vote(
       new anchor.BN(1),
-      "Jack Lahuna Laguna",
+      "Kyrgyztan",
     ).rpc();
 
-    const [jackAddress] = PublicKey.findProgramAddressSync(
-      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from("Jack Lahuna Laguna")],
+    const [kyrgyztanAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from("Kyrgyztan")],
       votingAddress,
     );
 
-    const jack = await program.account.candidate.fetch(jackAddress);
-    console.log(jack);
+    const kyrgyztan = await program.account.candidate.fetch(kyrgyztanAddress);
+    console.log(kyrgyztan);
 
-    expect (jack.candidateVotes.toNumber()).toEqual(1);
+    expect (kyrgyztan.candidateVotes.toNumber()).toEqual(1);
   });
 });

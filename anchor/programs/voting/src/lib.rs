@@ -4,7 +4,7 @@ use core::str;
 
 use anchor_lang::prelude::*;
 
-declare_id!("Count3AcZucFDPSFBAeHkQ6AvttieKUkyJ8HiQGhQwe");
+declare_id!("DwGLWi4HVytijLWPgbogFxj3JDtRRTP1AYA5KyeTDT9z");
 
 #[program]
 pub mod voting {
@@ -42,6 +42,8 @@ pub mod voting {
     pub fn vote(ctx: Context<Vote>, _poll_id: u64, _candidate_name: String) -> Result<()> {
         let candidate = &mut ctx.accounts.candidate;
         candidate.candidate_votes += 1;
+        msg!("Voted for {}", candidate.candidate_name);
+        msg!("Total votes: {}", candidate.candidate_votes);
         Ok(())
     }
 }
