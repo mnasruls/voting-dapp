@@ -1,10 +1,10 @@
 {
   "name": "voting-dapp",
   "scripts": {
-    "anchor": "cd anchor && anchor",
-    "anchor-build": "cd anchor && anchor build",
-    "anchor-localnet": "cd anchor && anchor localnet",
-    "anchor-test": "cd anchor && anchor test",
+    "anchor": "cd anchor && set -a; [ -f .env ] && . ./.env; set +a; anchor",
+    "anchor-build": "cd anchor && set -a; [ -f .env ] && . ./.env; set +a; anchor build",
+    "anchor-localnet": "cd anchor && set -a; [ -f .env ] && . ./.env; set +a; anchor localnet",
+    "anchor-test": "cd anchor && set -a; [ -f .env ] && . ./.env; set +a; anchor test",
     "build": "next build",
     "ci": "npm run build && npm run lint && npm run format:check",
     "dev": "next dev --turbopack",

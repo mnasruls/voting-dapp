@@ -5,15 +5,16 @@ package_manager = "yarn"
 resolution = true
 skip-lint = false
 
-[programs.localnet]
-voting = "Count3AcZucFDPSFBAeHkQ6AvttieKUkyJ8HiQGhQwe"
+[programs.devnet]
+voting = "DwGLWi4HVytijLWPgbogFxj3JDtRRTP1AYA5KyeTDT9z"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
-wallet = "~/.config/solana/id.json"
+# Read cluster and wallet from environment variables if set, fallback to existing values
+cluster = "${ANCHOR_CLUSTER}"
+wallet = "${ANCHOR_WALLET}"
 
 [scripts]
 test = "../node_modules/.bin/jest --preset ts-jest"
